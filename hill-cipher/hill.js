@@ -17,16 +17,25 @@ class Hill {
     }
 
     process(msg) {
-        if (msg.length % this.dimension !== 0) {
-            console.log(COLOR_SCHEME.error('Wrong message length!'));
-        } else if (Hill.hasInvalidLetters(msg)) {
+        if (Hill.hasInvalidLetters(msg)) {
             console.log(COLOR_SCHEME.error('Message has incorrect input!'));
-        } else {
-            let computedMessage = this.getComputedMessage(msg);
-            console.log(COLOR_SCHEME.success(computedMessage));
         }
 
+        if (msg.length % this.dimension !== 0) {
+            var rest = this.dimension - msg.length % this.dimension;
+            msg += new Array(rest).fill().map(Hill.getRandomLetter).join('');
+        }
+
+        let computedMessage = this.getComputedMessage(msg);
+
+        console.log(COLOR_SCHEME.success(computedMessage));
+
         rli.prompt(true);
+    }
+
+    static getRandomLetter() {
+        const randomInt = ~~(Math.random() * dictionary.length);
+        return Hill.toLetter(randomInt);
     }
 
     getComputedMessage(msg) {
@@ -77,7 +86,7 @@ class Hill {
         this.decryptMatrix = new Matrix(this.dimension, this.dimension).setData(decodeMatrix);
 
         console.log('\x1B[32mEncrypt: ', this.encryptMatrix.toArray().map(Hill.toLetter).join(''));
-        console.log('Decrypt: '.green, this.decryptMatrix.toArray().map(Hill.toLetter).join(''));
+        console.log('Decrypt: ', this.decryptMatrix.toArray().map(Hill.toLetter).join(''));
 
         function calculateMMI(determinant) {
             for (let mmi = 1; mmi < dictionary.length; mmi++) {
