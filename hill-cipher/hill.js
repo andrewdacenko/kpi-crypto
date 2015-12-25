@@ -50,7 +50,7 @@ class Hill {
     }
 
     getMessage(msg) {
-        let vector = new Matrix(3, 1)
+        let vector = new Matrix(this.dimension, 1)
             .setData([].slice.call(msg).map(Hill.getLetterIndex));
 
         let matrix = this.isDecryptMode ? this.decryptMatrix : this.encryptMatrix;
@@ -59,7 +59,6 @@ class Hill {
             .multiply(vector)
             .toArray()
             .map(i => i % dictionary.length)
-            .filter(i => !Number.isNaN(i))
             .map(Hill.toLetter)
             .join('');
     }
